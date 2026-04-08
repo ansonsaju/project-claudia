@@ -1,0 +1,6 @@
+node_modules/
+audits/
+claudia_runtime/
+.DS_Store
+.env
+*.log

@@ -1,0 +1,21 @@
+name: Claudia Adversarial Verification
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - run: npm install
+      - name: Run Claudia Security Gauntlet
+        run: node core/claudia-cli.js requirements.txt javascript
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          CLAUDIA_INTEGRITY_LEVEL: "strict"
