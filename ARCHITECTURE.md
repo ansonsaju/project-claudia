@@ -30,17 +30,6 @@ AI agents fail when they lack broader system context. Claudia integrates **MCP**
 ---
 
 ## 2. Engineering Efficiency (Performance & Unit Economics)
-... [rest of section 2 remains]
-
----
-
-#### 3. Regulatory Compliance (EU AI Act Ready) 🇪🇺
-Project Claudia is built with "Compliance-by-Design" to satisfy strict 2026 global AI regulations, specifically targeting the EU AI Act:
-* **Article 12 (Auditability)**: Claudia maintains a **12-month automated retention log** of every prompt, attack vector, and sandbox execution as structured JSON, providing full traceability.
-* **Article 14 (Human Oversight)**: Claudia never blindly auto-commits code. Certified code is outputted as a clean **Unified PR Diff** for final human approval, ensuring meaningful oversight and deterministic outputs.
-
----
-**Project Claudia: Minimalist. Autonomous. Indisputable.**
 
 Claudia is designed to solve the "Verification Crisis" in AI development without inflating operational costs.
 
@@ -56,7 +45,14 @@ By utilizing a **Circuit Breaker** (max 3 retries) and optimized prompt context 
 *Result: Security is "Shifted Left" into the development cycle without creating a bottleneck.*
 
 ### 🛡️ False Positive Mitigation
-Classic security tools often generate high "Noise." Claudia’s **Arbiter System** acts as a strict filter. A developer is only notified if a vulnerability is **reproproducible in the Sandbox**. If the Hacker hallucinates an attack, the Judge rejects it, keeping developer frustration low.
+Classic security tools often generate high "Noise." Claudia’s **Arbiter System** acts as a strict filter. A developer is only notified if a vulnerability is **reproducible in the Sandbox**. If the Hacker hallucinates an attack, the Judge rejects it, keeping developer frustration low.
+
+---
+
+#### 3. Regulatory Compliance (EU AI Act Ready) 🇪🇺
+Project Claudia is built with "Compliance-by-Design" to satisfy strict 2026 global AI regulations, specifically targeting the EU AI Act:
+* **Article 12 (Auditability)**: Claudia maintains a **12-month automated retention log** of every prompt, attack vector, and sandbox execution as structured JSON, providing full traceability.
+* **Article 14 (Human Oversight)**: Claudia never blindly auto-commits code. Certified code is outputted as a clean **Unified PR Diff** for final human approval, ensuring meaningful oversight and deterministic outputs.
 
 ---
 **Project Claudia: Minimalist. Autonomous. Indisputable.**
