@@ -3,7 +3,7 @@
 > **Autonomous Adversarial AI Verification & Compliance Platform**
 > 
 > **Built by [Anson (@ansonsaju)](https://github.com/ansonsaju)**
-> *Currently looking for my next role as a Software Engineer. [LinkedIn](https://www.linkedin.com/in/ansonsaju) | [Portfolio](https://ansonsaju.github.io)*
+> *Currently looking for my next role as a Software Engineer. [LinkedIn](https://www.linkedin.com/in/ansonsaju/) | [Portfolio](https://ansonsaju.github.io)*
 
 ---
 
