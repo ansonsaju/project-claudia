@@ -3,24 +3,25 @@ version: '3.8'
 services:
   claudia-engine:
     build: .
+    container_name: claudia-vanguard-engine
     ports:
       - "8001:8001"
-    environment:
-      - DEFAULT_PROVIDER=openai
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    env_file: .env
     volumes:
-      - .:/app
-    depends_on:
-      - claudia-sandbox
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: always
 
   claudia-sandbox:
     image: node:24-alpine
+    container_name: claudia-vanguard-sandbox
     command: tail -f /dev/null
     volumes:
       - ./claudia_runtime:/runtime
     security_opt:
       - no-new-privileges:true
+    restart: on-failure
 
 networks:
-  claudia-net:
-    driver: bridge
+  default:
+    name: claudia-network
