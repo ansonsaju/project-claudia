@@ -13,8 +13,9 @@
 ---
 
 ### **[📺 Watch the Official Launch: Engineering Trust (Video)](https://github.com/ansonsaju/project-claudia/blob/main/assets/Project_Claudia__Engineering_Trust.mp4)**
+*(Note: If the GitHub preview fails due to file size, click the link to download/view the high-res master.)*
 
-[![Project Claudia Launch](https://raw.githubusercontent.com/ansonsaju/project-claudia/main/ui/demo.webp)](https://github.com/ansonsaju/project-claudia/blob/main/assets/Project_Claudia__Engineering_Trust.mp4)
+[![Project Claudia Launch](https://raw.githubusercontent.com/ansonsaju/project-claudia/main/assets/demo.webp)](https://github.com/ansonsaju/project-claudia/blob/main/assets/Project_Claudia__Engineering_Trust.mp4)
 
 ---
 
