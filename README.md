@@ -1,8 +1,17 @@
 # Project Claudia 🛡️ (Enterprise Edition)
 
-> **Autonomous Adversarial AI Verification & Compliance Platform** | Directed by [Anson](https://github.com/ansonsaju)
+> **Autonomous Adversarial AI Verification & Compliance Platform**
+> 
+> **Built by [Anson (@ansonsaju)](https://github.com/ansonsaju)**
+> *Currently looking for my next role as a Software Engineer. [LinkedIn](https://www.linkedin.com/in/ansonsaju) | [Portfolio](https://ansonsaju.github.io)*
 
-Project Claudia is a production-grade verification engine designed to eliminate the AI verification bottleneck. It is engineered for the 2026 enterprise landscape, ensuring that AI-generated code is not only functionally correct but also **secure**, **deterministic**, and **compliant with international AI regulations**.
+---
+
+### **[📺 Watch the Official Launch Demo](https://github.com/ansonsaju/project-claudia/blob/main/ui/demo.webp)**
+
+![Claudia Vanguard Demo](/C:/Users/sajus/.gemini/antigravity/brain/95ab5a6c-bd0f-4f7e-9ffb-abf4c71d2e95/claudia_final_launch_demo_fixed_1775642506668.webp)
+
+Project Claudia is a production-grade verification engine designed to eliminate the AI verification bottleneck.
 
 ## ⚖️ Compliance & Governance
 Project Claudia is built to satisfy the rigorous requirements of the **EU AI Act (2026)**:
