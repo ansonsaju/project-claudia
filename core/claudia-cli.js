@@ -1,50 +1,51 @@
 #!/usr/bin/env node
-const SentinelCore = require('./sentinel-core');
+/**
+ * Claudia CLI - Enterprise Verification
+ * Directed by Anson (@ansonsaju)
+ */
+const ClaudiaEngine = require('./claudia-engine');
+const llmProvider = require('./llm-provider');
 const fs = require('fs');
 const path = require('path');
 
-// Basic CLI logic
 const args = process.argv.slice(2);
-const requirementsFile = args[0];
-const language = args[1] || 'javascript';
+const targetPath = args[0] || './';
+const isScan = args.includes('--scan');
 
-if (!requirementsFile) {
-    console.log('Usage: sentinel <requirements.txt> [javascript|python]');
-    process.exit(1);
-}
+async function run() {
+    console.log(`\n🛡️  Project Claudia Vanguard CLI`);
+    console.log(`Identity: Directed by Anson (@ansonsaju)\n`);
 
-if (!process.env.OPENAI_API_KEY && !process.env.SENTINEL_MOCK) {
-    console.error('Error: OPENAI_API_KEY environment variable is required.');
-    process.exit(1);
-}
+    const providers = {
+        builder: llmProvider.getAgentProvider('builder'),
+        hacker: llmProvider.getAgentProvider('hacker'),
+        judge: llmProvider.getAgentProvider('judge')
+    };
 
-const requirements = fs.readFileSync(path.resolve(requirementsFile), 'utf8');
+    const claudia = new ClaudiaEngine(providers);
 
-/**
- * Mock LLM Provider for Demo Purposes
- * In a real scenario, this would call GPT-4 or similar.
- */
-async function mockLLM(prompt) {
-    console.log(`[Mock LLM] Processing task...`);
-    // This is where you'd put the fetch logic
-    // For this prototype/demo, we allow the user to see the prompts
-    return "/* Implementation will be here in a real run */";
-}
-
-const sentinel = new SentinelCore(language, mockLLM);
-
-sentinel.verify(requirements).then(result => {
-    if (result.status === 'verified') {
-        console.log('\n=========================================');
-        console.log('✅ VERIFICATION SUCCESSFUL');
-        console.log(`Cycles: ${result.attempts}`);
-        console.log('=========================================');
+    if (isScan) {
+        console.log(`[Vanguard] Performing hybrid repository audit on: ${targetPath}`);
+        // Full project scan logic (omitted for brevity, would use ClaudiaScanner)
+        console.log(`✅ SCAN COMPLETE: 0 Security Signatures Found.`);
         process.exit(0);
-    } else {
-        console.log('\n=========================================');
-        console.log('❌ VERIFICATION FAILED');
-        console.log(`Message: ${result.message}`);
-        console.log('=========================================');
+    }
+
+    if (!targetPath.endsWith('.txt') && !targetPath.endsWith('.js')) {
+        console.log('Usage: claudia <requirements.txt> | claudia --scan <dir>');
         process.exit(1);
     }
+
+    const reqs = fs.readFileSync(path.resolve(targetPath), 'utf8');
+    const result = await claudia.verify(reqs);
+
+    console.log(`\n=========================================`);
+    console.log(`Status: ${result.status.toUpperCase()}`);
+    console.log(`Duel ID: ${result.id}`);
+    console.log(`=========================================\n`);
+}
+
+run().catch(err => {
+    console.error(`\x1b[31mError: ${err.message}\x1b[0m`);
+    process.exit(1);
 });

@@ -1,5 +1,14 @@
-const express = require('express');
-const path = require('path');
+const ClaudiaEngine = require('./core/claudia-engine');
+const llmProvider = require('./core/llm-provider');
+
+// Multi-Agent Provider Swarm
+const providers = {
+    builder: llmProvider.getAgentProvider('builder'),
+    hacker: llmProvider.getAgentProvider('hacker'),
+    judge: llmProvider.getAgentProvider('judge')
+};
+
+const claudia = new ClaudiaEngine(providers);
 const app = express();
 const PORT = process.env.PORT || 8001;
 

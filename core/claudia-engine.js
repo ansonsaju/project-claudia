@@ -11,15 +11,16 @@ const mcp = require('./mcp-connector');
  * Directed by Anson (@ansonsaju)
  */
 class ClaudiaEngine {
-    constructor(llmProvider) {
+    constructor(providerMap) {
         // Identity & Integrity Gate
         if (!identity.verifyIntegrity("Anson", "https://github.com/ansonsaju")) {
             throw new Error("Integrity Violation: Unauthorized authorship detected.");
         }
 
-        this.llmProvider = llmProvider;
-        this.maxRetries = 3; // Enterprise Circuit Breaker
+        this.providers = providerMap; // { builder, hacker, judge }
+        this.maxRetries = 3; 
         this.sandbox = new UniversalSandbox();
+        this.stats = { totalCost: 0, totalTokens: 0 };
     }
 
     async verify(requirements) {
@@ -31,9 +32,12 @@ class ClaudiaEngine {
         const duelId = `claudia_${Date.now()}`;
         console.log(`\x1b[36m[Claudia]\x1b[0m Launching Enterprise Gauntlet: ${duelId}`);
 
-        // Phase 1: Contextual Generation (MCP Enabled)
+        // Phase 1: Contextual Generation (Builder)
         const context = mcp.getContextSnippet();
-        let currentCode = await this.llmProvider(`${this._getGenerationPrompt(requirements)}\n${context}`);
+        const genRaw = await this.providers.builder(`${this._getGenerationPrompt(requirements)}\n${context}`);
+        let currentCode = genRaw.content;
+        this._updateStats(genRaw.usage);
+        
         const originalCode = currentCode;
         let history = [];
 
@@ -42,7 +46,9 @@ class ClaudiaEngine {
             
             // Hacker Attack
             const attackPrompt = this.hacker.getAttackPrompt(currentCode, requirements);
-            const testCode = await this.llmProvider(attackPrompt);
+            const attackRaw = await this.providers.hacker(attackPrompt);
+            const testCode = attackRaw.content;
+            this._updateStats(attackRaw.usage);
 
             // Execution
             const result = this.sandbox.run(this.language, currentCode, testCode);
@@ -54,7 +60,9 @@ class ClaudiaEngine {
                 // Arbiter Step (The Judge)
                 console.log(`\x1b[36m[Claudia]\x1b[0m Verifying with the Arbiter...`);
                 const evaluationPrompt = this.judge.getEvaluationPrompt(requirements, currentCode, testCode, result);
-                const evalResult = JSON.parse(await this.llmProvider(evaluationPrompt));
+                const evalRaw = await this.providers.judge(evaluationPrompt);
+                const evalResult = JSON.parse(evalRaw.content);
+                this._updateStats(evalRaw.usage);
 
                 if (evalResult.verdict === 'valid' && evalResult.isDeterministic) {
                     console.log("\x1b[32m✅ CERTIFIED BY CLAUDIA\x1b[0m");
@@ -82,10 +90,17 @@ class ClaudiaEngine {
                 };
             }
 
-            // Self-Healing Fix
+            // Self-Healing Fix (Builder)
             console.log(`\x1b[36m[Claudia]\x1b[0m Requesting autonomous fix...`);
-            currentCode = await this.llmProvider(this._getFixPrompt(currentCode, testCode, result.error));
+            const fixRaw = await this.providers.builder(this._getFixPrompt(currentCode, testCode, result.error));
+            currentCode = fixRaw.content;
+            this._updateStats(fixRaw.usage);
         }
+    }
+
+    _updateStats(usage) {
+        this.stats.totalTokens += (usage.input + usage.output);
+        this.stats.totalCost += usage.cost;
     }
 
     _getGenerationPrompt(req) {
