@@ -2,7 +2,6 @@
 
 [![CI Status](https://img.shields.io/github/actions/workflow/status/ansonsaju/project-claudia/claudia-verify.yml?branch=main&style=flat-square)](https://github.com/ansonsaju/project-claudia/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-[![Docker Pulls](https://img.shields.io/docker/pulls/ansonsaju/project-claudia?style=flat-square)](https://hub.docker.com/r/ansonsaju/project-claudia)
 [![Security: Certified](https://img.shields.io/badge/Security-Certified-green.svg?style=flat-square)](https://github.com/ansonsaju/project-claudia/blob/main/audits/)
 
 > **The Autonomous "Middleman" for Secure, Deterministic AI Development.**
