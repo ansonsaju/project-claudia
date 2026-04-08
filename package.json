@@ -1,0 +1,17 @@
+{
+  "name": "project-claudia",
+  "version": "1.0.0",
+  "description": "Autonomous Adversarial AI Verification & Compliance Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "cli": "node core/claudia-cli.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "dotenv": "^16.4.5",
+    "openai": "^4.61.0"
+  },
+  "author": "Anson (@ansonsaju)",
+  "license": "MIT"
+}
