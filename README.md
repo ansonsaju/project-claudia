@@ -12,9 +12,9 @@
 
 ---
 
-### **[📺 Watch the Official Launch Demo](https://github.com/ansonsaju/project-claudia/blob/main/ui/demo.webp)**
+### **[📺 Watch the Official Launch: Engineering Trust (Video)](https://github.com/ansonsaju/project-claudia/blob/main/assets/Project_Claudia__Engineering_Trust.mp4)**
 
-![Project Claudia Demo](https://github.com/ansonsaju/project-claudia/raw/main/ui/demo.webp)
+[![Project Claudia Launch](https://github.com/ansonsaju/project-claudia/raw/main/ui/demo.webp)](https://github.com/ansonsaju/project-claudia/blob/main/assets/Project_Claudia__Engineering_Trust.mp4)
 
 ---
 
@@ -44,11 +44,10 @@ Deploy Claudia into your enterprise cluster:
 kubectl apply -f k8s-deployment.yaml
 ```
 
-### 💻 Terminal-Native Mode
-For developers who live in the CLI:
-```bash
-npx project-claudia run --interactive
-```
+## 📖 Deep Dive & Architecture
+For a comprehensive understanding of the Vanguard security model and compliance metrics:
+- **[Full Technical Whitepaper (PDF)](https://github.com/ansonsaju/project-claudia/blob/main/assets/Project_Claudia.pdf)**
+- **[System Mind Map / Conceptual Architecture](https://github.com/ansonsaju/project-claudia/blob/main/assets/NotebookLM%20Mind%20Map%20(1).png)**
 
 ## 📊 Performance & Unit Economics
 *   **Cost Efficiency**: ~4,500 tokens per duel (~**$0.03 per Pull Request**).
