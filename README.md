@@ -4,7 +4,7 @@
 
 **Built by [Anson (@ansonsaju)](https://github.com/ansonsaju)**
 *Currently looking for my next role as a Software Engineer.*
-[LinkedIn](https://www.linkedin.com/in/ansonsaju/) | [Portfolio](https://ansonsaju.github.io)
+[LinkedIn](https://www.linkedin.com/in/anson-saju/) | [Portfolio](https://ansonsaju.github.io)
 
 ---
 
