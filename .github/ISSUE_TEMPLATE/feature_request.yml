@@ -1,0 +1,18 @@
+name: Feature Request
+description: Suggest an idea for this project
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Description of the feature
+      description: What should this feature do?
+      placeholder: I want Claudia to...
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Why is this feature needed?
+      placeholder: This would save me time by...
