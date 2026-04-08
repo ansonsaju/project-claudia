@@ -14,19 +14,19 @@
 
 ### **[📺 Watch the Official Launch: Engineering Trust (Video)](https://github.com/ansonsaju/project-claudia/blob/main/assets/Project_Claudia__Engineering_Trust.mp4)**
 
-[![Project Claudia Launch](https://github.com/ansonsaju/project-claudia/raw/main/ui/demo.webp)](https://github.com/ansonsaju/project-claudia/blob/main/assets/Project_Claudia__Engineering_Trust.mp4)
+[![Project Claudia Launch](https://raw.githubusercontent.com/ansonsaju/project-claudia/main/ui/demo.webp)](https://github.com/ansonsaju/project-claudia/blob/main/assets/Project_Claudia__Engineering_Trust.mp4)
 
 ---
 
 ## 🛑 The "Verification Crisis" in AI
 In 2026, the software industry is facing a crisis. While AI can write code in milliseconds, **96% of developers** do not fully trust it. Reviewing subtle AI flaws has increased code review times by **91%**, effectively creating an "AI verification bottleneck."
 
-**Project Claudia is the cure.** It acts as a lethal adversarial middleman that assume all code is insecure until it survives a specialized tri-agent gauntlet.
+**Project Claudia is the cure.** It acts as a lethal adversarial middleman that assumes all code is insecure until it survives a specialized tri-agent gauntlet.
 
 ## 🏗️ How It Works (Adversarial Tri-Agent Duel)
-Claudia utilizes an elite multi-agent system to achieve determinism:
-*   **The Builder**: Writes the initial code delta based on requirements.
-*   **The Adversary (Hacker)**: Relentlessly attacks the code with edge cases (SQLi, logic leaks, timing attacks).
+Claudia utilizes an elite multi-agent system grounded in real-world context via **Model Context Protocol (MCP)**:
+*   **The Builder**: Writes code delta based on requirements and **external Jira/GitHub Issues**.
+*   **The Adversary (Hacker)**: Relentlessly attacks the code with edge cases (SQLi, XSS, logic leaks).
 *   **The Judge (Arbiter)**: Evaluates the duel, prevents "lazy fixes," and certifies the final **Unified PR Diff**.
 
 ## 🚀 One-Click Enterprise Scaling
@@ -44,13 +44,20 @@ Deploy Claudia into your enterprise cluster:
 kubectl apply -f k8s-deployment.yaml
 ```
 
+### 💻 Terminal-Native Mode (Interactive CLI)
+For developers who prefer the command line over the web UI:
+```bash
+npm run interactive
+```
+
 ## 📖 Deep Dive & Architecture
 For a comprehensive understanding of the Vanguard security model and compliance metrics:
 - **[Full Technical Whitepaper (PDF)](https://github.com/ansonsaju/project-claudia/blob/main/assets/Project_Claudia.pdf)**
 - **[System Mind Map / Conceptual Architecture](https://github.com/ansonsaju/project-claudia/blob/main/assets/NotebookLM%20Mind%20Map%20(1).png)**
+- **[A.I. Governance (Architecture Docs)](https://github.com/ansonsaju/project-claudia/blob/main/ARCHITECTURE.md)**
 
 ## 📊 Performance & Unit Economics
-*   **Cost Efficiency**: ~4,500 tokens per duel (~**$0.03 per Pull Request**).
+*   **Cost Efficiency**: ~4,500 tokens per duel (~**$0.03 per Pull Request scan**).
 *   **Latency**: Global security scans in **<2s**, full logical audits in **42s**.
 *   **Offline/Air-Gapped**: Native **Ollama** support for total data privacy (EU AI Act Compliant).
 
