@@ -12,9 +12,11 @@
 
 ---
 
-### **[📺 Watch the Official Launch: Engineering Trust (Video)](https://github.com/ansonsaju/project-claudia/blob/main/assets/Project_Claudia__Engineering_Trust.mp4)**
-
-[![Project Claudia Launch](https://raw.githubusercontent.com/ansonsaju/project-claudia/main/ui/demo.webp)](https://github.com/ansonsaju/project-claudia/blob/main/assets/Project_Claudia__Engineering_Trust.mp4)
+<div align="center">
+  <video src="https://raw.githubusercontent.com/ansonsaju/project-claudia/main/assets/Project_Claudia__Engineering_Trust.mp4" width="100%" controls>
+    Your browser does not support the video tag.
+  </video>
+</div>
 
 ---
 
