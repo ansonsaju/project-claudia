@@ -5,12 +5,16 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "cli": "node core/claudia-cli.js"
+    "cli": "node core/claudia-cli.js",
+    "interactive": "node core/interactive-cli.js"
   },
   "dependencies": {
-    "express": "^4.21.0",
+    "chalk": "^4.1.2",
     "dotenv": "^16.4.5",
-    "openai": "^4.61.0"
+    "express": "^4.21.0",
+    "inquirer": "^8.2.7",
+    "openai": "^4.61.0",
+    "ora": "^5.4.1"
   },
   "author": "Anson (@ansonsaju)",
   "license": "MIT"

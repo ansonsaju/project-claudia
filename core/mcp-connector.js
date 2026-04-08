@@ -34,13 +34,26 @@ class MCPConnector {
     }
 
     /**
+     * Simulates fetching external business context (Jira/GitHub Issues)
+     */
+    getExternalIssues() {
+        return [
+            { id: "JIRA-101", title: "Implement secure session timeout", priority: "High" },
+            { id: "GH-42", title: "Refactor login logic to prevent timing attacks", status: "Open" }
+        ];
+    }
+
+    /**
      * Provides a context summary for agent prompts
      */
     getContextSnippet() {
+        const issues = this.getExternalIssues();
         return `
 [MCP CONTEXT]
 DATABASE TABLES: ${Object.keys(this.context.db_schema).join(', ')}
 LOCAL SCAN: ${this.context.local_files.length} files indexed.
+EXTERNAL CONTEXT: ${issues.length} Active Tickets found (Source: Jira/GitHub Issues).
+TICKET FOCUS: "${issues[0].title}"
         `;
     }
 }

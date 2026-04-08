@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claudia-vanguard
+  labels:
+    app: claudia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: claudia
+  template:
+    metadata:
+      labels:
+        app: claudia
+    spec:
+      containers:
+      - name: engine
+        image: ansonsaju/project-claudia:v1.0
+        ports:
+        - containerPort: 8001
+        env:
+        - name: NODE_ENV
+          value: "production"
+        resources:
+          limits:
+            cpu: "1.0"
+            memory: "1Gi"
+          requests:
+            cpu: "0.5"
+            memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: claudia-service
+spec:
+  selector:
+    app: claudia
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8001
+  type: LoadBalancer

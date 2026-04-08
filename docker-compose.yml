@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  claudia-engine:
+    build: .
+    ports:
+      - "8001:8001"
+    environment:
+      - DEFAULT_PROVIDER=openai
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - .:/app
+    depends_on:
+      - claudia-sandbox
+
+  claudia-sandbox:
+    image: node:24-alpine
+    command: tail -f /dev/null
+    volumes:
+      - ./claudia_runtime:/runtime
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  claudia-net:
+    driver: bridge

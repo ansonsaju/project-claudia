@@ -1,0 +1,32 @@
+name: Claudia Vanguard Audit
+description: Hire Claudia as your AI middleman to secure your repository.
+
+on:
+  workflow_call:
+    inputs:
+      target_dir:
+        description: 'Directory to audit'
+        required: false
+        default: './'
+        type: string
+    secrets:
+      OPENAI_API_KEY:
+        required: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      
+      - name: Install Claudia
+        run: npm install -g project-claudia
+      
+      - name: Adversarial Gauntlet
+        run: claudia --scan ${{ inputs.target_dir }}
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          VANGUARD_MODE: true
