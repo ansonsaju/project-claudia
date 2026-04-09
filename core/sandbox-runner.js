@@ -11,7 +11,7 @@ class SandboxRunner {
     }
 
     /**
-     * Executes JavaScript code
+     * Executes JavaScript code with a 10s timeout to prevent resource exhaustion
      * @param {string} code - The function implementation
      * @param {string} testCode - The adversarial tests
      * @returns {Object} Result of execution
@@ -38,7 +38,7 @@ try {
 `;
         fs.writeFileSync(filePath, fullScript);
 
-        const result = spawnSync('node', [filePath], { encoding: 'utf8' });
+        const result = spawnSync('node', [filePath], { encoding: 'utf8', timeout: 10000 });
         
         // Clean up
         try { fs.unlinkSync(filePath); } catch (e) {}
@@ -55,7 +55,7 @@ try {
     }
 
     /**
-     * Executes Python code
+     * Executes Python code with a 10s timeout to prevent resource exhaustion
      * @param {string} code - The function implementation
      * @param {string} testCode - The adversarial tests
      * @returns {Object} Result of execution
@@ -84,7 +84,7 @@ except Exception as e:
         const wrappedScript = "import sys\n" + fullScript;
         fs.writeFileSync(filePath, wrappedScript);
 
-        const result = spawnSync('python', [filePath], { encoding: 'utf8' });
+        const result = spawnSync('python', [filePath], { encoding: 'utf8', timeout: 10000 });
         
         // Clean up
         try { fs.unlinkSync(filePath); } catch (e) {}
