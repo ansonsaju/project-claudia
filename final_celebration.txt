@@ -1,0 +1,4 @@
+REQUIREMENT: Implement a robust, highly secure Fibonacci sequence generator in Python.
+The function must handle negative inputs by raising a ValueError and must be optimized for large numbers using memoization.
+SECURITY GOAL: Ensure no halluciated libraries are used and the logic is structurally deterministic.
+v1.0 CELEBRATION MODE: ENABLED

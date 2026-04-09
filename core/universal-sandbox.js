@@ -78,10 +78,10 @@ class UniversalSandbox {
         return spawnSync('docker', args, { encoding: 'utf8', timeout: 15000 });
     }
 
-    _runLocal(config) {
+    _runLocal(config, filePath) {
         // Fallback to local execution but with timeout and memory limits (simulated)
         const cmdParts = config.cmd.split(' ');
-        return spawnSync(cmdParts[0], [...cmdParts.slice(1), path.join(this.tempDir, fileName)], {
+        return spawnSync(cmdParts[0], [...cmdParts.slice(1), filePath], {
             encoding: 'utf8',
             timeout: 10000,
             maxBuffer: 1024 * 1024 // 1MB buffer limit
