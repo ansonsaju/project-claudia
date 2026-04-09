@@ -1,8 +1,6 @@
 const state = {
-    cycle: 0,
-    maxCycles: 5,
     isRunning: false,
-    language: 'javascript'
+    pollInterval: null
 };
 
 const elements = {
@@ -18,132 +16,95 @@ const elements = {
     generatorPanel: document.getElementById('generatorPanel'),
     hackerPanel: document.getElementById('hackerPanel'),
     integrityStatus: document.getElementById('integrityStatus'),
-    themeToggle: document.getElementById('themeToggle')
+    themeToggle: document.getElementById('themeToggle'),
+    certifiedBadge: document.getElementById('certifiedBadge')
 };
 
-const scenarios = {
-    'javascript': {
-        requirements: "Write a function to sanitize user input for HTML to prevent XSS.",
-        cycles: [
-            {
-                gen: "function sanitize(input) {\n  return input.replace('<script>', '');\n}",
-                hacker: "assert.strictEqual(\n  sanitize('<scr<script>ipt>alert(1)</script>'),\n  '&lt;script&gt;...',\n  'Failed nested script tag attack'\n);",
-                error: "AssertionError: Failed nested script tag attack. Result: <script>ipt>alert(1)"
-            },
-            {
-                gen: "function sanitize(input) {\n  return input.replace(/<script>/gi, '');\n}",
-                hacker: "assert.strictEqual(\n  sanitize('<img src=x onerror=alert(1)>'),\n  '&lt;img...', \n  'Failed event handler attack'\n);",
-                error: "AssertionError: Failed event handler attack. Result: <img src=x onerror=alert(1)>"
-            },
-            {
-                gen: "function sanitize(input) {\n  const map = { '<': '&lt;', '>': '&gt;' };\n  return input.replace(/[<>]/g, m => map[m]);\n}",
-                hacker: "assert.strictEqual(\n  sanitize('javascript:alert(1)'),\n  'safe_url',\n  'Failed protocol attack'\n);",
-                error: "AssertionError: Failed protocol attack. Result: javascript:alert(1)"
-            },
-            {
-                gen: "function sanitize(input) {\n  // Full robust sanitization\n  const div = document.createElement('div');\n  div.textContent = input;\n  return div.innerHTML;\n}",
-                hacker: "// Running deep fuzzing...\n// 1000 payloads tested...\n// 0 vulnerabilities found.",
-                error: null
-            }
-        ]
-    },
-    'python': {
-        requirements: "Write a function to query a database by ID safely.",
-        cycles: [
-            {
-                gen: "def query_user(id):\n    return db.execute(f'SELECT * FROM users WHERE id = {id}')",
-                hacker: "assert query_user('1; DROP TABLE users') != 'danger'\n# Fails SQL Injection",
-                error: "VulnerabilityDetected: SQL Injection possible with ID '1; DROP TABLE users'"
-            },
-            {
-                gen: "def query_user(id):\n    return db.execute('SELECT * FROM users WHERE id = %s' % id)",
-                hacker: "assert query_user(\"1' OR '1'='1\") != 'all_users'\n# Fails string interpolation injection",
-                error: "VulnerabilityDetected: Still using unsafe string interpolation."
-            },
-            {
-                gen: "def query_user(id):\n    return db.execute('SELECT * FROM users WHERE id = :id', {'id': id})",
-                hacker: "# Adversarial Fuzzing: testing hex, null bytes, long strings...\n# All tests passed.",
-                error: null
-            }
-        ]
-    }
-};
-
-function addLog(msg) {
+function addLog(msg, type = 'info') {
     const p = document.createElement('p');
     p.textContent = `> ${msg}`;
+    if (type === 'error') p.style.color = 'var(--error)';
+    if (type === 'success') p.style.color = 'var(--success)';
     elements.logs.appendChild(p);
     elements.logs.scrollTop = elements.logs.scrollHeight;
 }
 
 async function startDuel() {
-    if (state.isRunning) return;
+    const requirements = elements.promptInput.value.trim();
+    if (!requirements || state.isRunning) return;
+
     state.isRunning = true;
-    state.cycle = 0;
-    
-    // Universal Mode: Inference logic would happen here. For demo, we use JS.
-    state.language = 'javascript';
-    
-    const scenario = scenarios[state.language];
     elements.verifyBtn.disabled = true;
-    elements.engineStatus.textContent = 'RUNNING';
+    elements.engineStatus.textContent = 'ENGAGING';
+    elements.engineStatus.style.color = 'var(--primary)';
+    elements.certifiedBadge.style.display = 'none';
     elements.errorOverlay.style.display = 'none';
-    elements.integrityStatus.textContent = 'VERIFIED';
+    
+    addLog("Vanguard Engine: Initializing adversarial gauntlet...");
+    
+    try {
+        const response = await fetch('/api/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ requirements })
+        });
 
-    for (const step of scenario.cycles) {
-        state.cycle++;
-        elements.cycleCount.textContent = `${state.cycle} / 3`;
-        
-        // Phase 1: Generator Output
-        elements.generatorPanel.classList.add('fixing');
-        addLog(`Cycle ${state.cycle}: Generator proposing solution...`);
-        await typeCode(elements.generatorCode, step.gen);
-        elements.generatorPanel.classList.remove('fixing');
+        const result = await response.json();
 
-        await sleep(1000);
-
-        // Phase 2: Hacker Attack
-        elements.hackerPanel.classList.add('attacking');
-        addLog(`Cycle ${state.cycle}: Adversary generating targeted attacks...`);
-        await typeCode(elements.hackerCode, step.hacker);
-        
-        await sleep(1000);
-        
-        if (step.error) {
-            addLog(`Cycle ${state.cycle}: ATTACK SUCCESSFUL.`);
-            
-            if (state.cycle === 3) {
-                elements.engineStatus.textContent = 'MANUAL REVIEW';
-                elements.engineStatus.style.color = 'var(--error)';
-                addLog('🚨 CIRCUIT BREAKER: Max retries reached. flagged for Human Review.');
-                break;
-            }
-
-            elements.errorOverlay.style.display = 'flex';
-            elements.errorMessage.textContent = step.error;
-            elements.hackerPanel.classList.remove('verifying');
-            await sleep(2000);
-            elements.errorOverlay.style.display = 'none';
-        } else {
-            addLog(`Cycle ${state.cycle}: JUDGE CERTIFIED. Code is robust and deterministic.`);
-            elements.hackerPanel.classList.remove('verifying');
-            elements.engineStatus.textContent = 'CERTIFIED';
-            elements.engineStatus.classList.add('success-msg');
-            addLog(`CLAUDIA: Function certified for production release.`);
-            break;
+        if (result.status === 'error') {
+            throw new Error(result.error);
         }
-    }
 
-    state.isRunning = false;
-    elements.verifyBtn.disabled = false;
+        // Simulate real-time progress for UX
+        await simulateProgress(result);
+
+    } catch (err) {
+        addLog(`Critical Failure: ${err.message}`, 'error');
+        elements.engineStatus.textContent = 'ERROR';
+        elements.engineStatus.style.color = 'var(--error)';
+    } finally {
+        state.isRunning = false;
+        elements.verifyBtn.disabled = false;
+    }
+}
+
+async function simulateProgress(result) {
+    // Phase 1: Builder
+    elements.generatorPanel.classList.add('fixing');
+    addLog("Builder: Generating production candidate...");
+    await typeCode(elements.generatorCode, result.code);
+    elements.generatorPanel.classList.remove('fixing');
+    await sleep(800);
+
+    // Phase 2: Adversary (Mocking the audit trail UI)
+    elements.hackerPanel.classList.add('attacking');
+    addLog("Adversary: Launching targeted security audit...");
+    await typeCode(elements.hackerCode, result.diff || "// No vulnerabilities found in certified code.");
+    elements.hackerPanel.classList.remove('attacking');
+    await sleep(800);
+
+    // Final Resolution
+    if (result.status === 'certified') {
+        addLog("Arbiter: Verification Successful. Integrity Confirmed.", 'success');
+        elements.engineStatus.textContent = 'CERTIFIED';
+        elements.engineStatus.style.color = 'var(--success)';
+        elements.certifiedBadge.style.display = 'block';
+    } else {
+        addLog("Arbiter: Security Violation Detected. Circuit Breaker Engaged.", 'error');
+        elements.engineStatus.textContent = result.status.toUpperCase();
+        elements.engineStatus.style.color = 'var(--error)';
+        elements.errorOverlay.style.display = 'flex';
+        elements.errorMessage.textContent = result.summary || "Logic failure detected.";
+    }
 }
 
 async function typeCode(el, code) {
     el.textContent = '';
+    const speed = code.length > 500 ? 5 : 20;
     const lines = code.split('\n');
     for (const line of lines) {
         el.textContent += line + '\n';
-        await sleep(50);
+        await sleep(speed);
     }
 }
 
@@ -151,19 +112,16 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// Theme Management
+// Theme & Init Logic
 function toggleTheme() {
     const body = document.body;
     const currentTheme = body.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
     body.setAttribute('data-theme', newTheme);
     elements.themeToggle.querySelector('.toggle-icon').textContent = newTheme === 'dark' ? '🌙' : '☀️';
-    
     localStorage.setItem('claudia-theme', newTheme);
 }
 
-// Initialization
 const savedTheme = localStorage.getItem('claudia-theme') || 'dark';
 document.body.setAttribute('data-theme', savedTheme);
 elements.themeToggle.querySelector('.toggle-icon').textContent = savedTheme === 'dark' ? '🌙' : '☀️';
@@ -171,6 +129,8 @@ elements.themeToggle.querySelector('.toggle-icon').textContent = savedTheme === 
 elements.themeToggle.addEventListener('click', toggleTheme);
 elements.verifyBtn.addEventListener('click', startDuel);
 
-addLog("Claudia System Ready.");
-addLog("Vanguard Hybrid Protection: ACTIVE.");
-addLog("Describe requirements to begin adversarial gauntlet.");
+// Initial status check
+fetch('/api/status').then(r => r.json()).then(data => {
+    addLog(`System Identity: ${data.branding}`);
+    elements.integrityStatus.textContent = data.integrity;
+});
