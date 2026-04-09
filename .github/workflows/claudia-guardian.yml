@@ -1,0 +1,64 @@
+name: 🛡️ Claudia Guardian (Automated Audit)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  claudia-audit:
+    name: Adversarial AI Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Claudia Vanguard Audit
+        id: claudia_scan
+        run: |
+          # Get list of changed files
+          CHANGED_FILES=$(git diff --name-only origin/main | tr '\n' ',' | sed 's/,$//')
+          echo "Scanning changed files: $CHANGED_FILES"
+          node core/claudia-cli.js --ci --diff="$CHANGED_FILES"
+
+      - name: Automated Mentorship Comment
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const report = JSON.parse(process.env.CLAUDIA_REPORT || '{}');
+            const body = `### 🛡️ Claudia Guardian: Security Audit Record
+            
+            **STATUS: FAILURE** ❌
+            
+            Our adversarial tri-agent engine has detected potential vulnerabilities in this Pull Request. This Guardian is designed to act as an **automated mentor** to help you maintain top-tier code hygiene.
+            
+            #### 🔍 Findings:
+            - **Leaked Secrets**: ${report.leakedSecrets?.length || 0}
+            - **Security Signatures**: ${report.globalSignatures?.length || 0}
+            - **Adversarial Audit Failures**: ${report.adversarialAudits?.filter(a => a.status === 'sast_fail').length || 0}
+            
+            Please review the identified files and resolve the security risks before requesting a human review.
+            
+            ---
+            *This is an automated audit by [Project Claudia](https://github.com/ansonsaju/project-claudia).*`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            })

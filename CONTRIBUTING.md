@@ -34,5 +34,25 @@ npm build
 npm start
 ```
 
+## 🎓 Path to Maintenance
+
+We believe in shared governance and rewarding sustained contribution. Our pipeline for moving from a newcomer to a core decision-maker is transparent:
+
+### 1. Contributor (Level 1)
+- **Requirement**: Your first merged Pull Request.
+- **Goal**: Familiarize yourself with the "Adversarial Tri-Agent" architecture and the Universal Sandbox.
+
+### 2. Reviewer (Level 2)
+- **Requirement**: 5+ high-quality PRs merged OR providing helpful, technical reviews on 10+ PRs.
+- **Responsibility**: You are invited to review incoming community PRs. Your approval is a strong signal for maintainers.
+
+### 3. Core Maintainer (Level 3)
+- **Requirement**: Consistent contribution over 3+ months and deep expertise in a specific module (e.g., LLM Routing or Sandbox Security).
+- **Responsibility**: You have write access to the repository and lead architectural decisions.
+
+## 🛡️ Claudia Guardian (Automated Mentorship)
+
+Please note that every Pull Request is audited by **Project Claudia** itself. If our automated Guardian leaves a failing check on your PR, don't worry! It is designed to act as an automated mentor. Read its comments, fix the identified vulnerabilities, and push again.
+
 ## Community
 Join our [Discussions](https://github.com/ansonsaju/project-claudia/discussions) to talk about the future of AI verification!

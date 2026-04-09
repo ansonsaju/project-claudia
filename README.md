@@ -19,6 +19,26 @@
 
 ---
 
+## ⚡ Quick Start (2-Minute Setup)
+
+Get Project Claudia running locally in seconds.
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/ansonsaju/project-claudia.git && cd project-claudia
+
+# 2. Launch the Tri-Agent Engine & UI
+docker compose up -d
+
+# 3. Open the Dashboard
+# Visit http://localhost:3000 to start your first verification duel.
+```
+
+> [!TIP]
+> Prefer the terminal? Run `npm run interactive` for a native CLI experience.
+
+---
+
 ## 🛑 The "Verification Crisis" in AI
 In 2026, the software industry is facing a crisis. While AI can write code in milliseconds, **96% of developers** do not fully trust it. Reviewing subtle AI flaws has increased code review times by **91%**, effectively creating an "AI verification bottleneck."
 
@@ -56,6 +76,16 @@ For a comprehensive understanding of the Vanguard security model and compliance 
 - **[Full Technical Whitepaper (PDF)](https://github.com/ansonsaju/project-claudia/blob/main/assets/Project_Claudia.pdf)**
 - **[System Mind Map / Conceptual Architecture](https://github.com/ansonsaju/project-claudia/blob/main/assets/NotebookLM%20Mind%20Map%20(1).png)**
 - **[A.I. Governance (Architecture Docs)](https://github.com/ansonsaju/project-claudia/blob/main/ARCHITECTURE.md)**
+
+## 🕵️ Local-First Privacy & Air-Gapped Security
+Claudia is designed for sensitive environments where data sovereignty is non-negotiable.
+
+*   **Zero External Requests**: Built-in support for **Ollama** allows you to run Llama 3, Mistral, or CodeLlama entirely within your own firewall.
+*   **EU AI Act Ready**: Compliance-focused logging and deterministic verification satisfy strict regulatory audits.
+*   **Enterprise Sandbox**: Code execution happens in isolated, ephemeral containers—never on your host machine.
+
+> [!IMPORTANT]
+> For a deep dive into air-gapped architecture and compliance mapping, see **[ENTERPRISE.md](file:///C:/Users/sajus/.gemini/antigravity/scratch/claudia/ENTERPRISE.md)**.
 
 ## 📊 Performance & Unit Economics
 *   **Cost Efficiency**: ~4,500 tokens per duel (~**$0.03 per Pull Request scan**).

@@ -11,6 +11,8 @@ const path = require('path');
 const args = process.argv.slice(2);
 const targetPath = args[0] || './';
 const isScan = args.includes('--scan');
+const isCI = args.includes('--ci');
+const diffFiles = args.find(a => a.startsWith('--diff='))?.split('=')[1]?.split(',') || [];
 
 async function run() {
     console.log(`\n🛡️  Project Claudia Vanguard CLI`);
@@ -24,11 +26,20 @@ async function run() {
 
     const claudia = new ClaudiaEngine(providers);
 
-    if (isScan) {
-        console.log(`[Vanguard] Performing hybrid repository audit on: ${targetPath}`);
-        // Full project scan logic (omitted for brevity, would use ClaudiaScanner)
-        console.log(`✅ SCAN COMPLETE: 0 Security Signatures Found.`);
-        process.exit(0);
+    if (isScan || isCI) {
+        const ClaudiaScanner = require('./claudia-scanner');
+        console.log(`[Vanguard] Performing hybrid repository audit...`);
+        
+        const report = await ClaudiaScanner.scanRepository(diffFiles);
+        
+        if (isCI) {
+            console.log("::set-output name=report::" + JSON.stringify(report));
+        } else {
+            console.log(`✅ SCAN COMPLETE: ${report.leakedSecrets.length + report.globalSignatures.length} Security Issues Found.`);
+        }
+
+        const hasMajorIssues = report.leakedSecrets.length > 0 || report.globalSignatures.length > 0;
+        process.exit(hasMajorIssues ? 1 : 0);
     }
 
     if (!targetPath.endsWith('.txt') && !targetPath.endsWith('.js')) {
