@@ -48,7 +48,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Publish to NPM (OIDC)
+      - name: Publish to NPM (OIDC + Token)
         run: npm publish --provenance --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Note: For strict OIDC, npm supports tokenless but secrets.NPM_TOKEN is common fallback
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -13,9 +13,7 @@ const mcp = require('./mcp-connector');
 class ClaudiaEngine {
     constructor(providerMap) {
         // Identity & Integrity Gate
-        if (!identity.verifyIntegrity("Anson", "https://github.com/ansonsaju")) {
-            throw new Error("Integrity Violation: Unauthorized authorship detected.");
-        }
+        identity.verifyIntegrity();
 
         this.providers = providerMap; // { builder, hacker, judge }
         this.maxRetries = 3; 

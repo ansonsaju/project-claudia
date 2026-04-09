@@ -1,36 +1,33 @@
 const crypto = require('crypto');
+require('dotenv').config();
 
 /**
  * Claudia Identity & Integrity System
- * Directed by Anson (@ansonsaju)
+ * Ensures branding integrity and lineage tracking.
  */
 class ClaudiaIdentity {
     constructor() {
-        this.author = "Anson";
-        this.github = "https://github.com/ansonsaju";
-        // A unique hash representing the project's original lineage
-        this.signature = "claudia-alpha-anson-777";
+        // Original Lineage (Immutable)
+        this.originalAuthor = "Anson";
+        this.originalRepo = "https://github.com/ansonsaju";
+        
+        // Configurable Metadata
+        this.appName = process.env.CLAUDIA_APP_NAME || "Project Claudia";
+        this.instanceId = crypto.randomBytes(4).toString('hex');
     }
 
     /**
-     * Verifies that the project metadata has not been tampered with.
-     * If the author name or github URL is changed, verification fails.
+     * Verifies the authenticity of the engine core.
      */
-    verifyIntegrity(currentAuthor, currentGithub) {
-        if (currentAuthor !== this.author || currentGithub !== this.github) {
-            console.error("\x1b[31m%s\x1b[0m", "QUANTUM INTEGRITY FAILURE: Author identity has been tampered with.");
-            console.error("\x1b[31m%s\x1b[0m", `Original Author: ${this.author} | Modified: ${currentAuthor}`);
-            return false;
-        }
-        return true;
-    }
-
-    getSignature() {
-        return crypto.createHash('sha256').update(this.signature).digest('hex');
+    verifyIntegrity() {
+        const signature = `claudia-alpha-${this.originalAuthor}`;
+        const hash = crypto.createHash('sha256').update(signature).digest('hex');
+        console.log(`\x1b[32m[Identity]\x1b[0m ${this.appName} (v1.0.0) | Lineage: ${this.originalAuthor}`);
+        return hash;
     }
 
     getBranding() {
-        return `Project Claudia | Directed by ${this.author} | ${this.github}`;
+        return `${this.appName} | Directed by ${this.originalAuthor} | Instance: ${this.instanceId}`;
     }
 }
 

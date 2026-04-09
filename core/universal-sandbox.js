@@ -3,19 +3,21 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * UniversalSandbox
- * Supports dynamic language execution using templates and Docker.
+ * UniversalSandbox - Vanguard Guard 🛡️
+ * Supports isolated execution via Docker or restricted local processes.
  */
 class UniversalSandbox {
     constructor() {
         this.tempDir = path.join(process.cwd(), 'claudia_runtime');
         if (!fs.existsSync(this.tempDir)) fs.mkdirSync(this.tempDir);
         
+        this.hasDocker = this._checkDocker();
+        
         this.languageConfig = {
-            'javascript': { ext: '.js', cmd: 'node', wrapper: (c, t) => this._jsWrapper(c, t) },
-            'python': { ext: '.py', cmd: 'python', wrapper: (c, t) => this._pythonWrapper(c, t) },
-            'go': { ext: '.go', cmd: 'go run', wrapper: (c, t) => this._goWrapper(c, t), docker: 'golang:latest' },
-            'rust': { ext: '.rs', cmd: 'rustc', wrapper: (c, t) => this._rustWrapper(c, t), docker: 'rust:latest' }
+            'javascript': { ext: '.js', cmd: 'node', wrapper: (c, t) => this._jsWrapper(c, t), image: 'node:alpine' },
+            'python': { ext: '.py', cmd: 'python3', wrapper: (c, t) => this._pythonWrapper(c, t), image: 'python:alpine' },
+            'go': { ext: '.go', cmd: 'go run', wrapper: (c, t) => this._goWrapper(c, t), image: 'golang:alpine' },
+            'rust': { ext: '.rs', cmd: 'rustc', wrapper: (c, t) => this._rustWrapper(c, t), image: 'rust:alpine' }
         };
     }
 
@@ -23,12 +25,12 @@ class UniversalSandbox {
         const config = this.languageConfig[language];
         if (!config) throw new Error(`Unsupported language: ${language}`);
 
-        // SECURITY: SBOM / Dependency Guard check
+        // SECURITY: SBOM / Dependency Guard check (Enhanced)
         const violations = this._checkDependencies(code, language);
         if (violations.length > 0) {
             return {
                 success: false,
-                error: `SECURITY VULNERABILITY: Disallowed or Hallucinated packages detected: ${violations.join(', ')}`,
+                error: `[Vanguard] SECURITY VIOLATION: Disallowed library detected: ${violations.join(', ')}`,
                 exitCode: 403
             };
         }
@@ -39,7 +41,14 @@ class UniversalSandbox {
         
         fs.writeFileSync(filePath, fullScript);
 
-        const result = spawnSync(config.cmd.split(' ')[0], [...config.cmd.split(' ').slice(1), filePath], { encoding: 'utf8', timeout: 10000 });
+        let result;
+        if (this.hasDocker) {
+            console.log(`\x1b[34m[Sandbox]\x1b[0m Launching isolated container for ${language}...`);
+            result = this._runDocker(config, fileName);
+        } else {
+            console.log(`\x1b[33m[Sandbox Warning]\x1b[0m Docker not detected. Falling back to local process with reduced isolation.`);
+            result = this._runLocal(config, filePath);
+        }
         
         try { fs.unlinkSync(filePath); } catch (e) {}
 
@@ -50,19 +59,55 @@ class UniversalSandbox {
         };
     }
 
+    _runDocker(config, fileName) {
+        // Map current host directory to /app in container
+        const hostPath = path.resolve(this.tempDir);
+        const containerPath = '/app';
+        
+        const args = [
+            'run', '--rm',
+            '-v', `${hostPath}:${containerPath}:ro`,
+            '-w', containerPath,
+            '--memory', '128m',
+            '--cpus', '0.5',
+            '--network', 'none', // Air-gapped execution
+            config.image,
+            config.cmd, fileName
+        ];
+
+        return spawnSync('docker', args, { encoding: 'utf8', timeout: 15000 });
+    }
+
+    _runLocal(config) {
+        // Fallback to local execution but with timeout and memory limits (simulated)
+        const cmdParts = config.cmd.split(' ');
+        return spawnSync(cmdParts[0], [...cmdParts.slice(1), path.join(this.tempDir, fileName)], {
+            encoding: 'utf8',
+            timeout: 10000,
+            maxBuffer: 1024 * 1024 // 1MB buffer limit
+        });
+    }
+
+    _checkDocker() {
+        try {
+            const check = spawnSync('docker', ['--version']);
+            return check.status === 0;
+        } catch (e) {
+            return false;
+        }
+    }
+
     _checkDependencies(code, lang) {
-        const blacklisted = ['child_process', 'os', 'fs', 'eval', 'hallucinated-package', 'compromised-lib']; // SBOM Blacklist
+        const blacklisted = ['child_process', 'os', 'fs', 'eval', ' halluci', 'process.']; 
         const found = [];
         
         if (lang === 'javascript') {
             const matches = code.match(/require\(['"](.+?)['"]\)/g) || [];
             matches.forEach(m => {
                 const pkg = m.match(/['"](.+?)['"]/)[1];
-                if (blacklisted.includes(pkg)) found.push(pkg);
+                if (blacklisted.some(b => pkg.includes(b))) found.push(pkg);
             });
         }
-        
-        // In production, this would check against an SBOM database
         return found;
     }
 
@@ -75,12 +120,10 @@ class UniversalSandbox {
     }
 
     _goWrapper(code, test) {
-        // Simple Go wrapper for prototype
         return `package main\nimport "fmt"\n${code}\nfunc main() {\n${test}\nfmt.Println("success")\n}`;
     }
 
     _rustWrapper(code, test) {
-        // Simple Rust wrapper for prototype
         return `fn main() {\n${code}\n${test}\nprintln!("success");\n}`;
     }
 }
