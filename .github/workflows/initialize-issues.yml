@@ -12,6 +12,9 @@ jobs:
   create-issues:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
       - name: Create Good First Issues
         env:
           GH_TOKEN: ${{ github.token }}
