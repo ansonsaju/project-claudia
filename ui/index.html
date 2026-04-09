@@ -6,10 +6,13 @@
     <title>Claudia | Adversarial Verification</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="minimal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-theme="dark">
+    <div class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
+        <span class="toggle-icon">🌙</span>
+    </div>
     <div class="dashboard">
         <aside class="sidebar">
             <div class="logo">
@@ -34,48 +37,48 @@
         </aside>
 
         <main class="arena">
-            <header class="status-header">
-                <div class="status-stat">
-                    <span class="stat-label">Project Health</span>
-                    <span class="stat-value" id="healthScore" style="color:var(--success)">98%</span>
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-label">Project Health</span>
+                    <span class="status-value glow-success" id="healthScore">98%</span>
                 </div>
-                <div class="status-stat">
-                    <span class="stat-label">Verification Engine</span>
-                    <span class="stat-value" id="engineStatus">IDLE</span>
+                <div class="status-item">
+                    <span class="status-label">Verification Engine</span>
+                    <span class="status-value" id="engineStatus">IDLE</span>
                 </div>
-                <div class="status-stat">
-                    <span class="stat-label">Vanguard Mode</span>
-                    <span class="stat-value success-msg">HYBRID</span>
+                <div class="status-item">
+                    <span class="status-label">Vanguard Mode</span>
+                    <span class="status-value glow-success">HYBRID</span>
                 </div>
-                <div class="status-stat">
-                    <span class="stat-label">Integrity</span>
-                    <span class="stat-value" id="integrityStatus">VERIFIED</span>
+                <div class="status-item">
+                    <span class="status-label">Integrity</span>
+                    <span class="status-value" id="integrityStatus">VERIFIED</span>
                 </div>
-                <div class="status-stat">
-                    <span class="stat-label">Cycles</span>
-                    <span class="stat-value" id="cycleCount">0 / 3</span>
+                <div class="status-item">
+                    <span class="status-label">Cycles</span>
+                    <span class="status-value" id="cycleCount">0 / 3</span>
                 </div>
-            </header>
+            </div>
 
             <div style="margin-top: 1rem; margin-bottom: 2rem;">
                 <button class="btn-verify" id="scanProjectBtn" style="background:#f0f0f0; color:#000; border:1px solid #ddd;">Scan Full Project (Vanguard Audit)</button>
             </div>
 
-            <div class="panel-grid">
+            <div class="stage">
                 <section class="panel" id="generatorPanel">
-                    <div class="panel-head">
-                        <span>THE BUILDER</span>
+                    <div class="panel-header">
+                        <span class="panel-title">THE BUILDER</span>
                         <span id="generatorBadge">—</span>
                     </div>
-                    <div class="code-view"><pre id="generatorCode">// Standby</pre></div>
+                    <div class="code-container"><pre id="generatorCode">// Standby</pre></div>
                 </section>
-
+ 
                 <section class="panel" id="hackerPanel">
-                    <div class="panel-head">
-                        <span>THE ADVERSARY</span>
+                    <div class="panel-header">
+                        <span class="panel-title">THE ADVERSARY</span>
                         <span id="hackerBadge">—</span>
                     </div>
-                    <div class="code-view"><pre id="hackerCode">// Standing by for attack</pre></div>
+                    <div class="code-container"><pre id="hackerCode">// Standing by for attack</pre></div>
                 </section>
             </div>
 
@@ -84,6 +87,14 @@
                 <div>Directed by <a href="https://github.com/ansonsaju" target="_blank">Anson</a></div>
             </footer>
         </main>
+    </div>
+
+    <div class="error-overlay" id="errorOverlay">
+        <div class="error-modal">
+            <div class="error-icon">⚠️</div>
+            <h3>Vulnerability Detected</h3>
+            <p id="errorMessage">Security breach in candidate code.</p>
+        </div>
     </div>
 
     <script src="app.js"></script>

@@ -17,7 +17,8 @@ const elements = {
     errorMessage: document.getElementById('errorMessage'),
     generatorPanel: document.getElementById('generatorPanel'),
     hackerPanel: document.getElementById('hackerPanel'),
-    integrityStatus: document.getElementById('integrityStatus')
+    integrityStatus: document.getElementById('integrityStatus'),
+    themeToggle: document.getElementById('themeToggle')
 };
 
 const scenarios = {
@@ -94,15 +95,15 @@ async function startDuel() {
         elements.cycleCount.textContent = `${state.cycle} / 3`;
         
         // Phase 1: Generator Output
-        elements.generatorPanel.classList.add('verifying');
+        elements.generatorPanel.classList.add('fixing');
         addLog(`Cycle ${state.cycle}: Generator proposing solution...`);
         await typeCode(elements.generatorCode, step.gen);
-        elements.generatorPanel.classList.remove('verifying');
+        elements.generatorPanel.classList.remove('fixing');
 
         await sleep(1000);
 
         // Phase 2: Hacker Attack
-        elements.hackerPanel.classList.add('verifying');
+        elements.hackerPanel.classList.add('attacking');
         addLog(`Cycle ${state.cycle}: Adversary generating targeted attacks...`);
         await typeCode(elements.hackerCode, step.hacker);
         
@@ -150,6 +151,24 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// Theme Management
+function toggleTheme() {
+    const body = document.body;
+    const currentTheme = body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    body.setAttribute('data-theme', newTheme);
+    elements.themeToggle.querySelector('.toggle-icon').textContent = newTheme === 'dark' ? '🌙' : '☀️';
+    
+    localStorage.setItem('claudia-theme', newTheme);
+}
+
+// Initialization
+const savedTheme = localStorage.getItem('claudia-theme') || 'dark';
+document.body.setAttribute('data-theme', savedTheme);
+elements.themeToggle.querySelector('.toggle-icon').textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+
+elements.themeToggle.addEventListener('click', toggleTheme);
 elements.verifyBtn.addEventListener('click', startDuel);
 
 addLog("Claudia System Ready.");
