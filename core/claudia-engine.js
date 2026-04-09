@@ -18,6 +18,9 @@ class ClaudiaEngine {
         this.providers = providerMap; // { builder, hacker, judge }
         this.maxRetries = 3; 
         this.sandbox = new UniversalSandbox();
+        this.hacker = new HackerAgent();
+        this.judge = new JudgeAgent();
+        this.language = 'javascript';
         this.stats = { totalCost: 0, totalTokens: 0 };
     }
 
@@ -38,10 +41,16 @@ class ClaudiaEngine {
         }
 
         // Step 0: Universal Language Detection
+        this.language = this._detectLanguage(requirements);
+        this.hacker.language = this.language;
+        const duelId = `claudia_${Date.now()}`;
 
         // Phase 1: Contextual Generation (Builder)
         const context = mcp.getContextSnippet();
         const genRaw = await this.providers.builder(`${this._getGenerationPrompt(requirements)}\n${context}`);
+        
+        if (genRaw.error) return this._handleProviderError(genRaw, duelId);
+
         let currentCode = genRaw.content;
         this._updateStats(genRaw.usage);
         
@@ -54,6 +63,9 @@ class ClaudiaEngine {
             // Hacker Attack
             const attackPrompt = this.hacker.getAttackPrompt(currentCode, requirements);
             const attackRaw = await this.providers.hacker(attackPrompt);
+            
+            if (attackRaw.error) return this._handleProviderError(attackRaw, duelId);
+
             const testCode = attackRaw.content;
             this._updateStats(attackRaw.usage);
 
@@ -68,6 +80,9 @@ class ClaudiaEngine {
                 console.log(`\x1b[36m[Claudia]\x1b[0m Verifying with the Arbiter...`);
                 const evaluationPrompt = this.judge.getEvaluationPrompt(requirements, currentCode, testCode, result);
                 const evalRaw = await this.providers.judge(evaluationPrompt);
+                
+                if (evalRaw.error) return this._handleProviderError(evalRaw, duelId);
+
                 const evalResult = JSON.parse(evalRaw.content);
                 this._updateStats(evalRaw.usage);
 
@@ -100,9 +115,22 @@ class ClaudiaEngine {
             // Self-Healing Fix (Builder)
             console.log(`\x1b[36m[Claudia]\x1b[0m Requesting autonomous fix...`);
             const fixRaw = await this.providers.builder(this._getFixPrompt(currentCode, testCode, result.error));
+            
+            if (fixRaw.error) return this._handleProviderError(fixRaw, duelId);
+
             currentCode = fixRaw.content;
             this._updateStats(fixRaw.usage);
         }
+    }
+
+    _handleProviderError(artifact, duelId) {
+        const errorData = JSON.parse(artifact.content);
+        console.log(`\x1b[31m[Critical] LLM Provider Error: ${errorData.error}\x1b[0m`);
+        return {
+            status: 'error',
+            id: duelId,
+            reason: `LLM Provider Failure: ${errorData.error}`
+        };
     }
 
     _updateStats(usage) {
