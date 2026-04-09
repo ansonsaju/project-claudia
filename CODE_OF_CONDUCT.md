@@ -1,23 +1,32 @@
-# Contributor Covenant Code of Conduct
+# Project Claudia Code of Conduct 🛡️
 
 ## Our Pledge
 
-In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
+In the interest of fostering an open, professional, and secure environment, we as contributors and maintainers pledge to make participation in Project Claudia a harassment-free experience for everyone, regardless of experience level, background, or identity. We are here to build **trust in AI**, and that starts with trust in each other.
 
 ## Our Standards
 
-Examples of behavior that contributes to creating a positive environment include:
+Examples of behavior that contribute to a positive environment include:
+- **Professionalism**: We are building enterprise-grade security tools. We communicate with the precision and professionalism expected in the DevSecOps world.
+- **Helpfulness**: Being respectful of differing viewpoints and experiences, especially for new contributors navigating their first "Security Duel".
+- **Accountability**: Gracefully accepting constructive criticism and focusing on what is best for the project and its users.
 
-* Using welcoming and inclusive language
-* Being respectful of differing viewpoints and experiences
-* Gracefully accepting constructive criticism
-* Focusing on what is best for the community
-* Showing empathy towards other community members
+Examples of unacceptable behavior include:
+- Trolling, insulting, or personal attacks on other community members.
+- Harassment of any kind, whether public or private.
+- The use of sexualized language or imagery.
+- Publishing others' private information without explicit permission.
 
-Examples of unacceptable behavior by participants include:
+## Enforcement
 
-* The use of sexualized language or imagery and unwelcome sexual attention or advances
-* Trolling, insulting/derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or electronic address, without explicit permission
-* Other conduct which could reasonably be considered inappropriate in a professional setting
+The project maintainers are responsible for clarifying and enforcing our standards of acceptable behavior and will take appropriate and fair corrective action in response to any behavior that they deem inappropriate, threatening, offensive, or harmful.
+
+Maintainers who do not follow or enforce the Code of Conduct in good faith may face temporary or permanent repercussions as determined by other members of the project's leadership.
+
+## Reporting
+
+If you witness or experience behavior that violates this Code of Conduct, please report it privately to the maintainers. We are committed to maintaining a safe space for all contributors.
+
+---
+*Directed by Anson ([@ansonsaju](https://github.com/ansonsaju))*
+*Engineering Trust into the AI Development Lifecycle.*

@@ -102,6 +102,13 @@ Project Claudia is built to be an institutional-grade tool, not just a standalon
 - **OSAID 1.0 (Open Source AI Definition)**: We are committed to transparency in AI. Claudia fulfills the OSAID requirements for open-source AI, ensuring total visibility into agent prompts and decision logic.
 - **Hardened Supply Chain**: All releases follow the "Hardened Publishing" protocol with **OIDC-based signatures** to prevent supply chain contamination.
 
+## 🤝 Join the Community
+
+Project Claudia is driven by a global community of security researchers and AI engineers.
+- **[GitHub Discussions](https://github.com/ansonsaju/project-claudia/discussions)**: Ask questions, share your ideas, and connect with other users.
+- **[Contributor Pipeline](https://github.com/ansonsaju/project-claudia/blob/main/CONTRIBUTING.md#🎓-path-to-maintenance)**: Learn how to level up from a first-time contributor to a core maintainer.
+- **[Support Guide](file:///C:/Users/sajus/.gemini/antigravity/scratch/claudia/SUPPORT.md)**: Need help? Check our support document for the best way to get assistance.
+
 ## 💖 Support the Project
 If Claudia has secured your repository or saved your team hours of manual review, consider supporting our mission!
 [![Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8ebb)](https://github.com/sponsors/ansonsaju)
