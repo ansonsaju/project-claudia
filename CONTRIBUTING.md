@@ -50,6 +50,14 @@ We believe in shared governance and rewarding sustained contribution. Our pipeli
 - **Requirement**: Consistent contribution over 3+ months and deep expertise in a specific module (e.g., LLM Routing or Sandbox Security).
 - **Responsibility**: You have write access to the repository and lead architectural decisions.
 
+## 🌐 Global Governance & Timezone-Agnostic Collaboration
+
+Project Claudia is a global effort. As the center of gravity for open-source development shifts toward regions like **India, Japan, Brazil, and Germany**, we have optimized our governance to be timezone-independent:
+
+- **Documentation-First**: If it's not in an issue or a design doc, it doesn't exist. We avoid closed-door meetings and prioritize public, searchable discussions.
+- **Asynchronous Reviews**: Our maintainers are spread across the globe. Expect a code review within 24 hours, regardless of your location.
+- **Standardized Decisions**: We rely on the **Agentic AI Foundation (AAIF)** and **OSAID 1.0** standards to guide our architectural roadmap, ensuring objective and transparent decision-making.
+
 ## 🛡️ Claudia Guardian (Automated Mentorship)
 
 Please note that every Pull Request is audited by **Project Claudia** itself. If our automated Guardian leaves a failing check on your PR, don't worry! It is designed to act as an automated mentor. Read its comments, fix the identified vulnerabilities, and push again.

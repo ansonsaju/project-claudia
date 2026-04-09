@@ -4,6 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Docker: Optimized](https://img.shields.io/badge/Docker-Optimized-2496ED.svg?style=flat-square&logo=docker&logoColor=white)](https://github.com/ansonsaju/project-claudia/blob/main/docker-compose.yml)
 [![Security: Certified](https://img.shields.io/badge/Security-Certified-green.svg?style=flat-square)](https://github.com/ansonsaju/project-claudia/blob/main/audits/)
+[![AAIF Aligned](https://img.shields.io/badge/AAIF-Aligned-007ACC?style=flat-square&logo=linuxfoundation)](https://agentic-ai.org)
+[![OSAID 1.0](https://img.shields.io/badge/OSAID%201.0-Compliant-FFD700?style=flat-square)](https://opensource.org/osaid)
 
 > **The Autonomous "Middleman" for Secure, Deterministic AI Development.**
 > 
@@ -91,6 +93,14 @@ Claudia is designed for sensitive environments where data sovereignty is non-neg
 *   **Cost Efficiency**: ~4,500 tokens per duel (~**$0.03 per Pull Request scan**).
 *   **Latency**: Global security scans in **<2s**, full logical audits in **42s**.
 *   **Offline/Air-Gapped**: Native **Ollama** support for total data privacy (EU AI Act Compliant).
+
+## 🏛️ Standardized for the Agentic Era
+
+Project Claudia is built to be an institutional-grade tool, not just a standalone experiment. We align with the leading standards of 2026:
+
+- **AAIF (Agentic AI Foundation)**: Our integration of the **Model Context Protocol (MCP)** follows the interoperability and security standards set by the Linux Foundation's AAIF.
+- **OSAID 1.0 (Open Source AI Definition)**: We are committed to transparency in AI. Claudia fulfills the OSAID requirements for open-source AI, ensuring total visibility into agent prompts and decision logic.
+- **Hardened Supply Chain**: All releases follow the "Hardened Publishing" protocol with **OIDC-based signatures** to prevent supply chain contamination.
 
 ## 💖 Support the Project
 If Claudia has secured your repository or saved your team hours of manual review, consider supporting our mission!
