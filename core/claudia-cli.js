@@ -12,16 +12,18 @@ const args = process.argv.slice(2);
 const targetPath = args[0] || './';
 const isScan = args.includes('--scan');
 const isCI = args.includes('--ci');
+const strictCloud = args.includes('--strict-cloud');
 const diffFiles = args.find(a => a.startsWith('--diff='))?.split('=')[1]?.split(',') || [];
 
 async function run() {
     console.log(`\n🛡️  Project Claudia Vanguard CLI`);
     console.log(`Identity: Directed by Anson (@ansonsaju)\n`);
 
+    const options = { strictCloud };
     const providers = {
-        builder: llmProvider.getAgentProvider('builder'),
-        hacker: llmProvider.getAgentProvider('hacker'),
-        judge: llmProvider.getAgentProvider('judge')
+        builder: llmProvider.getAgentProvider('builder', options),
+        hacker: llmProvider.getAgentProvider('hacker', options),
+        judge: llmProvider.getAgentProvider('judge', options)
     };
 
     const claudia = new ClaudiaEngine(providers);
