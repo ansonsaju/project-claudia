@@ -1,5 +1,7 @@
 # Project Claudia 🛡️ (Enterprise Edition)
 
+![Project Claudia Banner](social-preview.png)
+
 [![CI Status](https://img.shields.io/github/actions/workflow/status/ansonsaju/project-claudia/claudia-verify.yml?branch=main&style=flat-square)](https://github.com/ansonsaju/project-claudia/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Docker: Optimized](https://img.shields.io/badge/Docker-Optimized-2496ED.svg?style=flat-square&logo=docker&logoColor=white)](https://github.com/ansonsaju/project-claudia/blob/main/docker-compose.yml)
