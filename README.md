@@ -79,6 +79,11 @@ For a comprehensive understanding of the Vanguard security model and compliance 
 - **[System Mind Map / Conceptual Architecture](https://github.com/ansonsaju/project-claudia/blob/main/assets/NotebookLM%20Mind%20Map%20(1).png)**
 - **[A.I. Governance (Architecture Docs)](https://github.com/ansonsaju/project-claudia/blob/main/ARCHITECTURE.md)**
 
+### 📚 Deep Technical Documentation
+Explore the inner workings of the Adversarial Engine:
+- [Adversarial Intelligence Architecture](docs/ARCHITECTURE.md): HAE Loops & Sandbox Isolation.
+- [Security & Ethics Model](docs/SECURITY_MODEL.md): Guardrails & Attribution Matrix.
+
 ## 🕵️ Local-First Privacy & Air-Gapped Security
 Claudia is designed for sensitive environments where data sovereignty is non-negotiable.
 
