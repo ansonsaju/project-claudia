@@ -9,17 +9,19 @@ To track our progress, we suggest using a **GitHub Project (Board)** with the fo
 ## 🏗️ Phase 1: Institutional Core (Q1-Q2 2026)
 *Target: Hardening the engine for enterprise compliance.*
 
-- [ ] **[WIKI Initialization]**: Complete the technical wiki migration.
-- [ ] **[AAIF Protocol]**: Deepen MCP integration for real-time Jira/GitHub sync.
-- [ ] **[Hardened Releases]**: Finalize OIDC-based npm and Docker registry publishing.
-- [ ] **[EU AI Act Audit]**: Automate the generation of compliance-ready verification logs.
+- [x] **[WIKI Initialization]**: Complete the technical wiki migration.
+- [x] **[AAIF Protocol]**: Deepen MCP integration for real-time Jira/GitHub sync.
+- [x] **[Hardened Releases]**: Finalize OIDC-based npm and Docker registry publishing.
+- [x] **[Reliability Layer]**: Implement network timeouts and 3x backoff retry logic.
+- [x] **[EU AI Act Audit]**: Automate the generation of compliance-ready verification logs.
 
 ## ⚔️ Phase 2: Adversarial Expansion (Q2-Q3 2026)
 *Target: Increasing the lethality of the Hacker Agent.*
 
-- [ ] **[Vulnerabilty Library]**: Add 50+ new SQLi, XSS, and RCE payloads.
-- [ ] **[Logic-Leak Detection]**: Train the Adversary to find "prompt-injection" style logic flaws in Builder code.
-- [ ] **[Hybrid Runtimes]**: Expand Sandbox support to Go, Rust, and Python 3.12+.
+- [x] **[Adversarial Defense]**: Enforce strict 10s sandbox runtime limits.
+- [x] **[Vulnerabilty Library]**: Add 50+ new SQLi, XSS, and RCE payloads.
+- [x] **[Logic-Leak Detection]**: Train the Adversary to find "prompt-injection" style logic flaws in Builder code.
+- [x] **[Hybrid Runtimes]**: Expand Sandbox support to Go, Rust, and Python 3.12+.
 
 ## 📊 Phase 3: Community & Insights (Q3-Q4 2026)
 *Target: Global scaling and contributor insights.*
