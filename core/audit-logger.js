@@ -30,6 +30,22 @@ class AuditLogger {
     }
 
     /**
+     * Records an application or network error
+     */
+    logError(errorId, metadata, errorDetails) {
+        const logFile = path.join(this.logDir, `error_${errorId}_${Date.now()}.json`);
+        const logEntry = {
+            id: errorId,
+            timestamp: new Date().toISOString(),
+            type: "error",
+            metadata: metadata,
+            error: errorDetails
+        };
+        fs.writeFileSync(logFile, JSON.stringify(logEntry, null, 2));
+        this.purgeOldLogs();
+    }
+
+    /**
      * Purges logs older than the retention period
      */
     purgeOldLogs() {

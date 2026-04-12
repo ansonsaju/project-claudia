@@ -1,4 +1,6 @@
 require('dotenv').config();
+const audit = require('./audit-logger');
+const { LLMProviderError, LLMTimeoutError } = require('./errors');
 
 /**
  * Claudia Universal LLM Provider
@@ -33,15 +35,31 @@ class LLMProvider {
                     console.error(`\x1b[31m[LLM Error]\x1b[0m Attempt ${attempts} failed: ${error.message}`);
                     
                     if (attempts > maxRetries) {
+                        let finalError = error;
+                        let finalProvider = providerName;
+                        let failover = false;
+
                         if (strictCloud && providerName !== 'ollama') {
-                            throw new Error(`Cloud logic failed after ${maxRetries} retries and strict-cloud is enabled.`);
-                        }
-                        
-                        if (providerName !== 'ollama') {
+                            finalError = new Error(`Cloud logic failed after ${maxRetries} retries and strict-cloud is enabled.`);
+                        } else if (providerName !== 'ollama') {
                             console.log(`\x1b[33m[LLM Fallback]\x1b[0m Cloud providers exhausted. Failing over to local Ollama...`);
-                            return await this._executeCompletion('ollama', 'llama3', prompt, providerName);
+                            try {
+                                return await this._executeCompletion('ollama', 'llama3', prompt, providerName);
+                            } catch (fallbackError) {
+                                finalError = fallbackError;
+                                finalProvider = 'ollama';
+                                failover = true;
+                            }
                         }
-                        throw error;
+
+                        const errorId = `err_${Date.now()}`;
+                        audit.logError(errorId, { role, provider: finalProvider }, { message: finalError.message });
+                        
+                        return {
+                            error: true,
+                            content: JSON.stringify({ error: finalError.message, type: 'system_error' }),
+                            usage: { input: 0, output: 0, cost: 0, provider: finalProvider, failover: failover }
+                        };
                     }
 
                     const delay = Math.pow(2, attempts) * 1000;
@@ -126,95 +144,147 @@ class LLMProvider {
         const apiKey = process.env.OPENAI_API_KEY;
         if (!apiKey) throw new Error("Missing OPENAI_API_KEY");
 
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: model === 'default' ? 'gpt-4o-mini' : model,
-                messages: [{ role: 'user', content: prompt }],
-                temperature: 0.2
-            })
-        });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-        if (!response.ok) {
-            const err = await response.json();
-            throw new Error(`OpenAI API Error: ${err.error?.message || response.statusText}`);
+        try {
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: model === 'default' ? 'gpt-4o-mini' : model,
+                    messages: [{ role: 'user', content: prompt }],
+                    temperature: 0.2
+                }),
+                signal: controller.signal
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(`OpenAI API Error: ${err.error?.message || response.statusText}`);
+            }
+
+            const data = await response.json();
+            return data.choices[0].message.content;
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                throw new LLMTimeoutError('OpenAI request timed out after 30s', 'openai', error);
+            }
+            throw new LLMProviderError(error.message, 'openai', error);
+        } finally {
+            clearTimeout(timeoutId);
         }
-
-        const data = await response.json();
-        return data.choices[0].message.content;
     }
 
     async _callAnthropic(prompt, model) {
         const apiKey = process.env.ANTHROPIC_API_KEY;
         if (!apiKey) throw new Error("Missing ANTHROPIC_API_KEY");
 
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': apiKey,
-                'anthropic-version': '2023-06-01'
-            },
-            body: JSON.stringify({
-                model: model === 'default' ? 'claude-3-5-sonnet-20240620' : model,
-                max_tokens: 4096,
-                messages: [{ role: 'user', content: prompt }]
-            })
-        });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-        if (!response.ok) {
-            const err = await response.json();
-            throw new Error(`Anthropic API Error: ${err.error?.message || response.statusText}`);
+        try {
+            const response = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': apiKey,
+                    'anthropic-version': '2023-06-01'
+                },
+                body: JSON.stringify({
+                    model: model === 'default' ? 'claude-3-5-sonnet-20240620' : model,
+                    max_tokens: 4096,
+                    messages: [{ role: 'user', content: prompt }]
+                }),
+                signal: controller.signal
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(`Anthropic API Error: ${err.error?.message || response.statusText}`);
+            }
+
+            const data = await response.json();
+            return data.content[0].text;
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                throw new LLMTimeoutError('Anthropic request timed out after 30s', 'anthropic', error);
+            }
+            throw new LLMProviderError(error.message, 'anthropic', error);
+        } finally {
+            clearTimeout(timeoutId);
         }
-
-        const data = await response.json();
-        return data.content[0].text;
     }
 
     async _callOllama(prompt, model) {
         const host = process.env.OLLAMA_HOST || 'http://localhost:11434';
         
-        const response = await fetch(`${host}/api/generate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                model: model === 'default' ? 'llama3' : model,
-                prompt: prompt,
-                stream: false
-            })
-        });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 45000); // Ollama gets 45s
 
-        if (!response.ok) {
-            throw new Error(`Ollama API Error: ${response.statusText}`);
+        try {
+            const response = await fetch(`${host}/api/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: model === 'default' ? 'llama3' : model,
+                    prompt: prompt,
+                    stream: false
+                }),
+                signal: controller.signal
+            });
+
+            if (!response.ok) {
+                throw new Error(`Ollama API Error: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            return data.response;
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                throw new LLMTimeoutError('Ollama request timed out after 45s', 'ollama', error);
+            }
+            throw new LLMProviderError(error.message, 'ollama', error);
+        } finally {
+            clearTimeout(timeoutId);
         }
-
-        const data = await response.json();
-        return data.response;
     }
 
     async _callGemini(prompt, model) {
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) throw new Error("Missing GEMINI_API_KEY");
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model === 'default' ? 'gemini-1.5-flash' : model}:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-            })
-        });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-        if (!response.ok) {
-            const err = await response.json();
-            throw new Error(`Gemini API Error: ${err.error?.message || response.statusText}`);
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model === 'default' ? 'gemini-1.5-flash' : model}:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                }),
+                signal: controller.signal
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(`Gemini API Error: ${err.error?.message || response.statusText}`);
+            }
+
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                throw new LLMTimeoutError('Gemini request timed out after 30s', 'gemini', error);
+            }
+            throw new LLMProviderError(error.message, 'gemini', error);
+        } finally {
+            clearTimeout(timeoutId);
         }
-
-        const data = await response.json();
-        return data.candidates[0].content.parts[0].text;
     }
 }
 
